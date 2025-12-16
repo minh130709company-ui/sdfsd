@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>🧸🌧️💗</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, #fff0f5, #e8f4ff);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Đường đi */
+    .lane { position:absolute; left:0; right:0; bottom:70px; height:120px; }
+
+    /* Nhân vật đi bộ (2 chân – emoji) */
+    .walker {
+      position: absolute;
+      bottom: 0;
+      font-size: 88px;
+      cursor: pointer;
+      animation: walk linear infinite;
+      user-select: none;
+    }
+    @keyframes walk {
+      0% { left: -120px; }
+      100% { left: calc(100% + 120px); }
+    }
+
+    /* Con đúng (gấu) */
+    .bear { animation-duration: 6s; }
+
+    /* Con đánh lạc hướng */
+    .decoy { opacity: .95; }
+    .cat { animation-duration: 5s; }
+    .bunny { animation-duration: 7s; }
+
+    /* Quà */
+    .gift {
+      display: none;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 22px 26px;
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(0,0,0,.15);
+      text-align: center;
+      z-index: 5;
+      animation: pop .35s ease-out;
+    }
+    @keyframes pop { from{transform:translate(-50%,-50%) scale(.8);opacity:0} to{transform:translate(-50%,-50%) scale(1);opacity:1} }
+
+    .flower { font-size: 56px; margin-bottom: 6px; }
+    .letter { font-size: 16px; color:#444; line-height:1.4; }
+
+    /* Gợi ý */
+    .hint { position:absolute; bottom:16px; width:100%; text-align:center; color:#777; font-size:14px; }
+
+    /* Mưa tim */
+    .heart {
+      position: absolute;
+      top: -10vh;
+      font-size: 18px;
+      animation: fall linear forwards;
+      opacity: .9;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      to { transform: translateY(120vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="lane">
+    <!-- Gấu đúng: đi bằng 2 chân, cầm hoa -->
+    <div class="walker bear" id="bear" onclick="right()">🧸🌷</div>
+
+    <!-- Mấy con khác để bấm nhầm -->
+    <div class="walker decoy cat" style="top:-6px" onclick="wrong()">🐱</div>
+    <div class="walker decoy bunny" style="top:-10px" onclick="wrong()">🐰</div>
+  </div>
+
+  <div class="gift" id="gift">
+    <div class="flower">🌷</div>
+    <div class="letter">
+      tớ iuuuu bé,<br>
+      bé ngoannn hếc giận anhhh nhớ 🤍
+    </div>
+  </div>
+
+  <!-- Voice -->
+  <audio id="voice" src="voice2.m4a"></audio>
+
+  <div class="hint" id="hint">bắt đúng chú gấu cầm hoa nha 🧸</div>
+
+  <script>
+    // set vị trí ban đầu ngẫu nhiên
+    document.querySelectorAll('.walker').forEach(w=>{
+      w.style.left = (-100 - Math.random()*200) + 'px';
+    });
+
+    function wrong(){
+      const h = document.getElementById('hint');
+      h.textContent = 'hong phảiii~ thử lại nha 💗';
+      rainHearts(14);
+    }
+
+    function right(){
+      // dừng đi bộ
+      document.querySelectorAll('.walker').forEach(w=>w.style.animationPlayState='paused');
+      document.getElementById('gift').style.display='block';
+      document.getElementById('hint').textContent='🤍';
+
+      // phát voice
+      const audio = document.getElementById('voice');
+      audio.currentTime = 0;
+      audio.play();
+
+      rainHearts(40);
+    }
+
+    function rainHearts(n){
+      for(let i=0;i<n;i++){
+        const s = document.createElement('span');
+        s.className='heart';
+        s.textContent = '💗';
+        s.style.left = Math.random()*100 + 'vw';
+        s.style.animationDuration = (2.5 + Math.random()*2) + 's';
+        s.style.fontSize = (14 + Math.random()*18) + 'px';
+        document.body.appendChild(s);
+        setTimeout(()=>s.remove(), 5000);
+      }
+    }
+  </script>
+</body>
+</html>
